@@ -2,8 +2,8 @@ const json = "../data/samples.json"
 
 // Button handler
 function optionChanged(subjectID) {
-
     console.log("new subject selected ", subjectID);
+    buildPlots(subjectID);
     
 }
 
@@ -26,7 +26,7 @@ function init() {
 }
 
 function buildPlots(subjectID){
-    // Get information from JSON file and use it to build the plots
+    // Get information from JSON file and use it to build plots and gather metadata
     d3.json(json).then(function(data){
 
         // assign data to variables
@@ -38,7 +38,7 @@ function buildPlots(subjectID){
         var otuLabels = samples[0].otu_labels;
         var sampleValues = samples[0].sample_values;
 
-        // Build Bar Chart
+        // Bar Chart
         // Get top 10 code from https://stackoverflow.com/questions/34883068/how-to-get-first-n-number-of-elements-from-an-array
         var top10IDs = otuIDs.slice(0,10).map(id => `OTU ${id}`);
         var top10Samples = sampleValues.slice(0,10);
@@ -55,20 +55,33 @@ function buildPlots(subjectID){
         var data1 = [trace1];
 
         var layout1 = {
-            title: `Top 10 Bacteria Types: Subject ${subjectID}`
+            title: `Top 10 Bacteria Types: Subject ${subjectID}`,
+            xaxis: {title: "Sample Count"}
         };
 
-        Plotly.newPlot("bar", data1, layout1)
+        Plotly.newPlot("bar", data1, layout1);
 
+        // Bubble Chart
+        var trace2 = {
+            x: otuIDs,
+            y: sampleValues,
+            text: otuLabels,
+            mode: "markers",
+            marker: {
+                size: sampleValues,
+                color: otuIDs,
+            }
+        }
 
+        var data2 = [trace2]
 
+        var layout2 = {
+            title: `All Bacteria Samples: Subject ${subjectID}`,
+            xaxis: {title: "OTU ID"},
+            yaxis: {title: "Sample count"}
+        }
 
-
-
-
-
-
-
+        Plotly.newPlot("bubble", data2, layout2);
     });
 }
 
