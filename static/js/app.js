@@ -2,7 +2,7 @@ const json = "../data/samples.json"
 
 // Button handler
 function optionChanged(subjectID) {
-    console.log("new subject selected ", subjectID);
+    console.log("new subject selected", subjectID);
     buildPlots(subjectID);
     
 }
@@ -26,7 +26,7 @@ function init() {
 }
 
 function buildPlots(subjectID){
-    // Get information from JSON file and use it to build plots and gather metadata
+    // Get information from JSON file and use it to build plots and gather demographic info
     d3.json(json).then(function(data){
 
         // assign data to variables
@@ -82,6 +82,20 @@ function buildPlots(subjectID){
         }
 
         Plotly.newPlot("bubble", data2, layout2);
+
+        // Demographics from Metadata
+        var metadata = data["metadata"].filter(sample => sample.id == subjectID);
+
+        // select HTML table and clear it
+        var demographicTable = d3.select("#sample-metadata");
+        demographicTable.html("");
+
+        // From Activity 14.2.7
+        Object.entries(metadata[0]).forEach(([key, value]) => {
+            demographicTable.append("p").text(`${key}: ${value}`)
+        })
+
+
     });
 }
 
