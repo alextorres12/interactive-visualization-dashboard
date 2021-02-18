@@ -17,11 +17,24 @@ function init() {
 
         subjects.forEach(function(name){
             dropdownMenu.append("option").property("value", name).text(name)
-        })
+        });
 
+        // Build plot based on first option
+        buildPlots(subjects[0]);
         
-        
-    })
+    }); 
+}
+
+function buildPlots(subjectID){
+    // Get information from JSON file and use it to build the plots
+    d3.json(json).then(function(data){
+        // assign data to variables
+        var samples = data["samples"].filter(sample => sample.id == subjectID);
+        console.log(samples);
+
+
+
+    });
 }
 
 init();
