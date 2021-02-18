@@ -15,7 +15,9 @@ function init() {
     d3.json(json).then(function(data){
         var subjects = data.names;
 
-        console.log(subjects);
+        subjects.forEach(function(name){
+            dropdownMenu.append("option").property("value", name).text(name)
+        })
 
         
         
